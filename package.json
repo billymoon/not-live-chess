@@ -1,0 +1,19 @@
+{
+  "name": "not-live-chess",
+  "version": "0.0.3",
+  "description": "simple dgt board position publishing service",
+  "main": "index.js",
+  "bin": "bin/not-live-chess",
+  "scripts": {
+    "start": "node ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chess.js": "^0.11.0",
+    "express": "^4.17.1",
+    "serialport": "^9.0.6",
+    "ws": "^7.4.3"
+  }
+}
