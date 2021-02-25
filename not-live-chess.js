@@ -140,8 +140,6 @@ void (async () => {
             time: new Date() * 1,
           })
         );
-        console.log(chess.moves());
-        console.log(chess.history());
       }
     });
   });

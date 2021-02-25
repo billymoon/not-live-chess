@@ -78,6 +78,7 @@ process.on("SIGINT", () => {
     shutdown()
     shutdown = null
   }
+  process.exit(0)
 });
 
 module.exports = boardConnector;

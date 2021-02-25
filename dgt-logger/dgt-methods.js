@@ -4,7 +4,7 @@ const dgtMethods = [
     messageTypeCode: "40",
   },
   {
-    methodName: "mode",
+    methodName: "updateBoardMode",
     messageTypeCode: "44",
   },
   {

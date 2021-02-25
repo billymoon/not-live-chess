@@ -24,12 +24,12 @@ const fenish = (position) =>
     .replace(/\.+/g, (all) => all.length);
 
 const pieceNames = {
-  k: "King",
-  n: "Knight",
-  r: "Rook",
-  q: "Queen",
-  b: "Bishop",
-  p: "Pawn",
+  K: "King",
+  N: "Knight",
+  R: "Rook",
+  Q: "Queen",
+  B: "Bishop",
+  P: "Pawn",
 };
 
 const moveAsSpoken = (move) => {
@@ -42,10 +42,11 @@ const moveAsSpoken = (move) => {
     file,
     takes,
     target,
+    promotion,
     check,
     checkmate,
   ] = move.match(
-    /^([rnbqkRNBQK])?([0-8])?([a-h])?(x)?([a-h][0-8]|O-O|O-O-O)(\+)?(#)?$/
+    /^([RNBQK])?([0-8])?([a-h])?(x)?([a-h][0-8]|O-O|O-O-O)(?:=([RNBQ]))?(\+)?(#)?$/
   );
 
   if (target === "O-O") {
@@ -53,9 +54,11 @@ const moveAsSpoken = (move) => {
   } else if (target === "O-O-O") {
     return "Castles long";
   } else if (target) {
-    return `${protagonist ? pieceNames[protagonist.toLowerCase()] : ''}${
+    return `${protagonist ? pieceNames[protagonist] : ''}${
       rank ? rank : ""
-    }${file ? file : ""}${takes ? " takes" : ""} ${target.replace('a', 'a:')}${
+    }${file ? file : ""}${takes ? " takes" : ""} ${target.replace('a', 'a:').replace('e', ":e").replace('c', ":c")}${
+      promotion ? ` promote to ${pieceNames[promotion]}` : ""
+    }${
       check ? " check" : ""
     }${checkmate ? " checkmate!!" : ""}`;
   } else {

@@ -42,9 +42,11 @@ const connect = async () => {
     reset,
     getBoard,
     getSerialNumber,
-    getVersion
+    getVersion,
+    updateBoardMode
   } = await boardConnector(socket);
 
+  console.log(updateBoardMode)
   await reset();
   const serialNumber = await getSerialNumber();
   const version = await getVersion();
