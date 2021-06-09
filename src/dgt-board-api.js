@@ -13,6 +13,7 @@ const dgtBoardApi = callback => {
     sendCode(DGT_SEND_RESET);
     sendCode(DGT_SEND_UPDATE_BRD);
     subscribe((message) => {
+      console.log({message})
       if (message.type === 142 && message.message[1] !== 0) {
         // TODO: perhaps calculate position from update message instead of
         //       making another call to the board to get the position

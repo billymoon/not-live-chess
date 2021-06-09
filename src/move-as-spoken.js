@@ -7,6 +7,11 @@ const pieceNames = {
   P: "Pawn",
 };
 
+const sayLetter = target => target
+  .replace("a", "a:")
+  .replace("e", ":e")
+  .replace("c", ":c")
+
 const moveAsSpoken = (move) => {
   let [
     all,
@@ -27,12 +32,9 @@ const moveAsSpoken = (move) => {
   } else if (target === "O-O-O") {
     return "Castles long";
   } else if (target) {
-    return `${protagonist ? pieceNames[protagonist] : ""}${rank ? rank : ""}${
-      file ? file : ""
-    }${takes ? " takes" : ""} ${target
-      .replace("a", "a:")
-      .replace("e", ":e")
-      .replace("c", ":c")}${
+    return `${protagonist ? pieceNames[protagonist] : ""}${rank ? ` ${rank}` : ""}${
+      file ? ` ${sayLetter(file)}` : ""
+    }${takes ? " takes" : ""} ${sayLetter(target)}${
       promotion ? ` promote to ${pieceNames[promotion]}` : ""
     }${check ? " check" : ""}${checkmate ? " checkmate!!" : ""}`;
   } else {

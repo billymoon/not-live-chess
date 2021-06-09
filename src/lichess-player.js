@@ -16,6 +16,7 @@ const say = (words, ...others) => {
 let nextMoves = [];
 
 const init = async () => {
+  console.log({token:process.env.TOKEN})
   const { nowPlaying } = await fetch(
     "https://lichess.org/api/account/playing",
     {
@@ -91,7 +92,9 @@ const init = async () => {
     }
   };
 
+  console.log(`connecting`)
   dgtBoardApi(({ position }) => {
+    console.log(`connected`)
     const match = nextMoves.includes(position);
     if (match) {
       const move = chess.moves()[nextMoves.indexOf(position)];
@@ -109,4 +112,37 @@ const init = async () => {
   });
 };
 
+init()
+
 const interval = setInterval(init, 20000);
+
+/*
+async function lichessSeekStreamHandler(response) {
+  console.log('waiting...')
+  response.on('close', () => {
+    console.log('started')
+    const interval = setInterval(init, 20000);
+  })
+}
+
+get(
+  `https://lichess.org/api/board/seek`,
+  {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${process.env.TOKEN}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      rated: true,
+      time: 15,
+      increment: 10
+    })
+  },
+  (response) => lichessSeekStreamHandler(response).catch(console.warn)
+);
+
+setTimeout(() => {
+  console.log('its been a while, giving up')
+}, 60000)
+*/

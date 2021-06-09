@@ -2,7 +2,7 @@ const WebSocket = require("ws");
 const SubscriberFactory = require("./subscriber-factory.js");
 
 module.exports = (onOpen) => {
-  const ws = new WebSocket("ws://127.0.0.1:1983");
+  const ws = new WebSocket(process.env.WEBSOCKET || "ws://localhost:1983");
   const sendCode = (code) =>
     ws.send(JSON.stringify({ type: "sendboard", code }));
 
