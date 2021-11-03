@@ -39,6 +39,8 @@ websocketClient(message => {
         console.log(JSON.stringify(data))
         if (data.position === seekPosition) {
             api.challenge("maia9");
+        } else if (!/K/i.test(data.position) && !game.chess.game_over()) {
+            api.resign(game.id);
         }
         const indexOfMove = game.moves.indexOf(data.position)
         if (indexOfMove !== -1) {

@@ -76,6 +76,13 @@ const move = (gameId, UCIMove) => get(`https://lichess.org/api/board/game/${game
     },
 })
 
+const resign = (gameId) => get(`https://lichess.org/api/board/game/${gameId}/resign`, {
+    method: "POST",
+    headers: {
+        Authorization: `Bearer ${process.env.TOKEN}`,
+    },
+})
+
 const challenge = async (user) => await fetch(
     `https://lichess.org/api/challenge/${user}`,
     {
@@ -100,5 +107,6 @@ module.exports = {
     streamEvent,
     gameStream,
     account,
-    move
+    move,
+    resign
 }
