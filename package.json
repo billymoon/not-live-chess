@@ -15,6 +15,7 @@
     "express": "^4.17.1",
     "isomorphic-unfetch": "^3.1.0",
     "serialport": "^9.0.6",
+    "stockfish": "^11.0.0",
     "ws": "^7.4.3"
   }
 }
