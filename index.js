@@ -1,7 +1,8 @@
 require = require("esm")(module);
 const next = require("next");
 const {
-  serverRuntimeConfig: { dev, port, wssOnly },
+  serverRuntimeConfig: { port, wssOnly },
+  publicRuntimeConfig: { dev },
 } = require("./next.config.js");
 const server = require("./src/server/server.js").default;
 
