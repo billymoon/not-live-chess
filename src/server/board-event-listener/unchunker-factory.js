@@ -19,4 +19,4 @@ const UnchunkerFactory = (callback) => {
   };
 };
 
-module.exports = UnchunkerFactory;
+export default UnchunkerFactory;

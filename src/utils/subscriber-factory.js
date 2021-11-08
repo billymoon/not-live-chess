@@ -13,10 +13,14 @@ const SubscriberFactory = () => {
     }
   };
 
+  const broadcast = (message) =>
+    subscribers.forEach((subscriber) => subscriber(message));
+
   return {
     subscribers,
     subscribe,
+    broadcast,
   };
 };
 
-module.exports = SubscriberFactory
+export default SubscriberFactory;

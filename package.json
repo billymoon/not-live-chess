@@ -1,20 +1,29 @@
 {
   "name": "not-live-chess",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "simple dgt board position publishing service",
-  "main": "index.js",
+  "main": "server.js",
   "bin": "bin/not-live-chess",
   "scripts": {
-    "start": "node ."
+    "dev": "node .",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "chess.js": "^0.11.0",
-    "express": "^4.17.1",
+    "chessboardjsx": "^2.4.7",
+    "esm": "^3.2.25",
+    "husky": "^7.0.4",
     "isomorphic-unfetch": "^3.1.0",
+    "next": "^12.0.2",
+    "prettier": "^2.4.1",
+    "pretty-quick": "^3.1.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "serialport": "^9.0.6",
+    "ssh2": "^1.5.0",
     "stockfish": "^11.0.0",
     "ws": "^7.4.3"
   }

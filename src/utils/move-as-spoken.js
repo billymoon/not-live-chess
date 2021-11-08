@@ -7,11 +7,8 @@ const pieceNames = {
   P: "Pawn",
 };
 
-const sayLetter = target => target
-  .replace("a", "a:")
-  .replace("e", ":e")
-  .replace("c", ":c")
-  .replace("b", ":b")
+const sayLetter = (target) =>
+  target.replace("a", "a:").replace("e", ":e").replace("c", ":c");
 
 const moveAsSpoken = (move) => {
   let [
@@ -33,15 +30,17 @@ const moveAsSpoken = (move) => {
   } else if (target === "O-O-O") {
     return "Castles long";
   } else if (target) {
-    return `${protagonist ? pieceNames[protagonist] : ""}${rank ? ` ${rank}` : ""}${
-      file ? ` ${sayLetter(file)}` : ""
-    }${takes ? " takes" : ""} ${sayLetter(target)}${
-      promotion ? ` promote to ${pieceNames[promotion]}` : ""
-    }${check ? " check" : ""}${checkmate ? " checkmate!!" : ""}`;
+    return `${protagonist ? pieceNames[protagonist] : ""}${
+      rank ? ` ${rank}` : ""
+    }${file ? ` ${sayLetter(file)}` : ""}${takes ? " takes" : ""} ${sayLetter(
+      target
+    )}${promotion ? ` promote to ${pieceNames[promotion]}` : ""}${
+      check ? " check" : ""
+    }${checkmate ? " checkmate!!" : ""}`;
   } else {
     console.log({ move });
     return "";
   }
 };
 
-module.exports = moveAsSpoken;
+export default moveAsSpoken;

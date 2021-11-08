@@ -23,4 +23,4 @@ const fenish = (position) =>
     .join("/")
     .replace(/\.+/g, (all) => all.length);
 
-module.exports = fenish;
+export default fenish;
