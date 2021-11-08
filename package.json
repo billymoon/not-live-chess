@@ -1,6 +1,6 @@
 {
   "name": "not-live-chess",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "simple dgt board position publishing service",
   "main": "server.js",
   "bin": "bin/not-live-chess",

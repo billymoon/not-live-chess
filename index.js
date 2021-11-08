@@ -8,7 +8,7 @@ const server = require("./src/server/server.js").default;
 if (wssOnly) {
   server({ port, wssOnly });
 } else {
-  const app = next({ dev });
+  const app = next({ dev, dir: __dirname });
 
   const requestHandler = app.getRequestHandler();
 
