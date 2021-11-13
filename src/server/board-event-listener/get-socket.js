@@ -38,7 +38,7 @@ const openSerialPort = async (serialport) => {
   });
 };
 
-const getSocket = async (onOpen, onData) => {
+const getSocket = async (onOpen, onData, onError) => {
   // TODO: fix case where sometimes two connections cause running twice at same time
   const socketName = await getSocketName();
   const serialport = new SerialPort(socketName, {
@@ -46,9 +46,7 @@ const getSocket = async (onOpen, onData) => {
     autoOpen: false,
   });
   serialport.on("open", onOpen);
-  serialport.on("error", (err) => {
-    console.log({ err });
-  });
+  serialport.on("error", onError);
   serialport.on("data", onData);
   await openSerialPort(serialport);
   return serialport;

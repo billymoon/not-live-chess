@@ -16,7 +16,17 @@ const getBoard = async () => {
       serialport ||
       (await getSocket(
         () => console.log("serialport is open"),
-        (data) => unchunker(data)
+        (data) => unchunker(data),
+        (err) => {
+          const errorObject = { type: "error", data: err };
+          console.log(JSON.stringify(errorObject));
+          broadcast(errorObject);
+          if (err.disconnected) {
+            board = null;
+            serialport = null;
+            console.log("reset board");
+          }
+        }
       ));
     board = boardApi(serialport);
     let include = {};

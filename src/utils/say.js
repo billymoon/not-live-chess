@@ -1,6 +1,8 @@
 const { exec } = require("child_process");
 const { Client } = require("ssh2");
 
+// osascript -e 'output volume of (get volume settings)'
+// say "[[volm 0.1]] this is not so loud"
 const getSSH = (config) => {
   const ssh2 = new Client();
 

@@ -4,12 +4,7 @@ import Chess from "chess.js";
 import nextjsWebsocketClient from "../utils/nextjs-websocket-client.js";
 import moveAsSpoken from "../utils/move-as-spoken.js";
 import api from "../api/api.js";
-// import Lichess from "../utils/lichess.js"
 import lichess from "../utils/nextjs-lichess.js";
-
-// const token = 't7ncvfKD6x2Q7UrQ'
-// const token = 'VV9qx1jB65rkSaED'
-// const lichess = Lichess({ token })
 
 const ChessboardJSX = dynamic(() => import("chessboardjsx"), { ssr: false });
 // const seekPosition = "rnbqkbnr/pppppppp/8/8/8/7Q/PPPPPPPP/RNBQKBNR";
@@ -25,7 +20,7 @@ const Page = () => {
       setPosition(chess.fen());
       setPgn(chess.pgn({ max_width: 5, newline_char: "\n" }));
       setFen(chess.fen());
-      moves = getMoves();
+      // moves = getMoves();
     };
 
     const getMoves = () =>
@@ -78,13 +73,22 @@ const Page = () => {
               chess.move(move, { sloppy: true });
             });
             updateState();
+            api.say(
+              `${Math.round(message.clock.initial / 1000 / 60)} minutes plus ${
+                message.clock.increment / 1000
+              }`
+            );
           } else if (message.type === "gameState") {
             chess.reset();
             message.moves.split(" ").map((move) => {
               chess.move(move, { sloppy: true });
             });
             if (chess.turn() === myColor) {
-              api.say(moveAsSpoken(chess.history().slice(-1)[0]));
+              api.say(
+                `${moveAsSpoken(chess.history().slice(-1)[0])} ${Math.round(
+                  (myColor === "w" ? message.wtime : message.btime) / 1000 / 60
+                )} minutes`
+              );
             }
             updateState();
           } else {

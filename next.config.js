@@ -15,7 +15,6 @@ module.exports = {
     // specify websocket url to subscribe to board updates, useful for remote access to board, or local development without reconnecting to board each time server restarts
     websocketUrl: process.env.WSS_URL || null,
     lichessToken: process.env.LICHESS_TOKEN || null,
-    font: "Andika",
-    theme: process.env.THEME || "united",
+    font: process.env.FONT || "Roboto",
   },
 };
