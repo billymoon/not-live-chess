@@ -85,9 +85,10 @@ const Page = () => {
             });
             if (chess.turn() === myColor) {
               api.say(
-                `${moveAsSpoken(chess.history().slice(-1)[0])} ${Math.round(
-                  (myColor === "w" ? message.wtime : message.btime) / 1000 / 60
-                )} minutes`
+                moveAsSpoken(chess.history().slice(-1)[0])
+                // `${moveAsSpoken(chess.history().slice(-1)[0])} ${Math.round(
+                //   (myColor === "w" ? message.wtime : message.btime) / 1000 / 60
+                // )} minutes`
               );
             }
             updateState();
