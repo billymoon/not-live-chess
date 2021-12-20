@@ -108,7 +108,39 @@ export default ({ token }) => {
       }),
     }).then((r) => r.json());
 
+  const getUserGames = async (user, since, until, speed) => {
+    const data = await fetch(
+      `https://lichess.org/api/games/user/${user}?pgnInJson=true&since=${
+        new Date(since) * 1
+      }&until=${new Date(until) * 1}&perfType=${speed}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/x-ndjson",
+        },
+      }
+    ).then((r) => r.text());
+
+    return data;
+  };
+
+  const getUserCurrentGame = async (user) => {
+    const data = await fetch(
+      `https://lichess.org/api/user/${user}/current-game?pgnInJson=true`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/x-ndjson",
+        },
+      }
+    ).then((r) => r.text());
+
+    return data;
+  };
+
   return {
+    getUserGames,
+    getUserCurrentGame,
     challenge,
     nowPlaying,
     // streamEvent,

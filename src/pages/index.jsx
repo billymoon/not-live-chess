@@ -5,6 +5,7 @@ import nextjsWebsocketClient from "../utils/nextjs-websocket-client.js";
 import moveAsSpoken from "../utils/move-as-spoken.js";
 import api from "../api/api.js";
 import lichess from "../utils/nextjs-lichess.js";
+import { LINE_WIDTH } from "../utils/remarkable.js";
 
 const ChessboardJSX = dynamic(() => import("chessboardjsx"), { ssr: false });
 // const seekPosition = "rnbqkbnr/pppppppp/8/8/8/7Q/PPPPPPPP/RNBQKBNR";
@@ -18,7 +19,13 @@ const Page = () => {
   useEffect(() => {
     const updateState = () => {
       setPosition(chess.fen());
-      setPgn(chess.pgn({ max_width: 5, newline_char: "\n" }));
+      // setPgn(chess.pgn({ max_width: 5, newline_char: "\n" }));
+      const updatedPgn = chess.pgn({
+        max_width: LINE_WIDTH,
+        newline_char: "\n",
+      });
+      api.remark(updatedPgn);
+      setPgn(updatedPgn);
       setFen(chess.fen());
       // moves = getMoves();
     };
@@ -37,6 +44,9 @@ const Page = () => {
       });
 
     const chess = new Chess();
+    if (process.browser) {
+      window.chess = chess;
+    }
     let myColor = null;
     let gameId = null;
     let ws = null;
@@ -62,13 +72,25 @@ const Page = () => {
 
       const nowPlaying = await lichess.nowPlaying();
       if (nowPlaying.length === 1) {
+        // const chess = new Chess()
+        // chess.load_pgn(game)
+        // chess.delete_comments()
+        // setPgn(output)
+
         const currentGame = nowPlaying[0];
         setPosition(currentGame.fen);
         myColor = currentGame.color[0];
         gameId = currentGame.fullId;
-        lichess.gameStream(currentGame.fullId, (message) => {
+        let headerArray = [];
+        lichess.gameStream(currentGame.fullId, async (message) => {
           if (message.type === "gameFull") {
+            // TODO: use game id, instead of current-game
+            const currentPgn = await lichess.getUserCurrentGame("billymoon");
             chess.reset();
+            chess.load_pgn(currentPgn);
+            headerArray = Object.entries(chess.header());
+            chess.reset();
+            headerArray.forEach((headerItem) => chess.header(...headerItem));
             message.state.moves.split(" ").map((move) => {
               chess.move(move, { sloppy: true });
             });
@@ -80,6 +102,7 @@ const Page = () => {
             );
           } else if (message.type === "gameState") {
             chess.reset();
+            headerArray.forEach((headerItem) => chess.header(...headerItem));
             message.moves.split(" ").map((move) => {
               chess.move(move, { sloppy: true });
             });
