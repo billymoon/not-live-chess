@@ -3,6 +3,7 @@ import Head from "next/head";
 import getConfig from "next/config";
 import { ChakraProvider } from "@chakra-ui/react";
 import { theme, extendTheme } from "@chakra-ui/react";
+import api from "../api/api";
 
 // import "./_app.css";
 // import Layout from "../components/Layout";
@@ -112,6 +113,7 @@ if (dev) {
   global.publicRuntimeConfig = publicRuntimeConfig;
   global.emotionTheme = emotionTheme;
   global.log = (x) => console.log(x) || x;
+  global.api = api;
 }
 
 function MyApp({ Component, pageProps }) {

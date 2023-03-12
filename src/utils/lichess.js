@@ -108,18 +108,32 @@ export default ({ token }) => {
       }),
     }).then((r) => r.json());
 
-  const getUserGames = async (user, since, until, speed) => {
-    const data = await fetch(
-      `https://lichess.org/api/games/user/${user}?pgnInJson=true&since=${
+  const getUserGames = async ({
+    user,
+    since = "1970",
+    until = new Date().toISOString(),
+    speed = null,
+    max = null,
+  }) => {
+    console.log(
+      `https://lichess.org/api/games/user/${user}?pgnInJson=true&sort=dateAsc&since=${
         new Date(since) * 1
-      }&until=${new Date(until) * 1}&perfType=${speed}`,
+      }&until=${new Date(until) * 1}&perfType=${speed}&max=${max}`
+    );
+
+    const data = await fetch(
+      `https://lichess.org/api/games/user/${user}?pgnInJson=true&sort=dateAsc&since=${
+        new Date(since) * 1
+      }&perfType=${speed}&max=${max}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/x-ndjson",
         },
       }
-    ).then((r) => r.text());
+    )
+      .then((r) => r.text())
+      .catch(console.log);
 
     return data;
   };

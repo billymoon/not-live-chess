@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { Container, VStack, Button } from "@chakra-ui/react";
 import nextjsWebsocketClient from "../utils/nextjs-websocket-client.js";
 import positionDiff from "../utils/position-diff";
+import api from "../api/api.js";
 
 const ChessboardJSX = dynamic(() => import("chessboardjsx"), { ssr: false });
 
@@ -15,7 +16,6 @@ const Page = () => {
   useEffect(() => {
     nextjsWebsocketClient((data) => {
       if (data.position) {
-        console.log(data);
         setPosition(data.position);
 
         const { instructions, missingPiecesFen } = positionDiff(
@@ -32,12 +32,13 @@ const Page = () => {
           );
         } else {
           setSetupInstructions("we are in the target position");
+          api.say("target position");
         }
       } else if (data.type === "error") {
         console.log({ err: data });
       }
-    }).then(() => {
-      console.log("websocket connected");
+    }).then((ws) => {
+      console.log("websocket connected", ws);
     });
   }, []);
 

@@ -2,7 +2,7 @@ import boardApi from "./board-api.js";
 import getSocket from "./get-socket.js";
 import UnchunkerFactory from "./unchunker-factory.js";
 import SubscriberFactory from "../../utils/subscriber-factory.js";
-import interpreter from "../../utils/interpreter.js";
+import interpreter from "./interpreter.js";
 
 const { broadcast, subscribe } = SubscriberFactory();
 

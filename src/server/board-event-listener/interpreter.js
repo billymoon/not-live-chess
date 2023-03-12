@@ -1,4 +1,4 @@
-import fenish from "./fenish.js";
+import fenish from "../../utils/fenish.js";
 
 const interpreter = (type, message) => {
   if (type === 142) {
