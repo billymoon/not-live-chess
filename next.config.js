@@ -1,10 +1,12 @@
-const { loadEnvConfig } = require("@next/env");
+import nextEnv from "@next/env";
+
+const { loadEnvConfig } = nextEnv;
 const index = process.argv.findIndex((x) => x === "-p" || x === "--port");
 const port = index !== -1 ? process.argv[index + 1] : "3000";
 
 loadEnvConfig(".");
 
-module.exports = {
+const nextConfig = {
   // experimental: { esmExternals: true },
   transpilePackages: ["chess.js"],
   serverRuntimeConfig: {
@@ -21,4 +23,6 @@ module.exports = {
   },
 };
 
-console.log(module.exports);
+console.log(nextConfig);
+
+export default nextConfig;

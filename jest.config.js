@@ -2,4 +2,4 @@ const config = {
   modulePathIgnorePatterns: ["<rootDir>/misc/", "<rootDir>/.next/"],
 };
 
-module.exports = config;
+export default config;

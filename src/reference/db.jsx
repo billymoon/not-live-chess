@@ -3,7 +3,7 @@ import { appendFileSync } from "fs";
 import { join } from "path";
 import { Fragment, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import Chess from "chess.js";
+import { Chess } from "chess.js";
 import nextjsWebsocketClient from "../utils/nextjs-websocket-client.js";
 import moveAsSpoken from "../utils/move-as-spoken.js";
 import api from "../api/api.js";

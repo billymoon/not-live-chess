@@ -1,4 +1,4 @@
-const pgnParser = require("pgn-parser");
+import pgnParser from "pgn-parser";
 
 const gameMapperFromPgnGames = (pgn, mapper) => {
   const results = pgnParser.parse(pgn);

@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import Chess from "chess.js";
+import { Chess } from "chess.js";
 import nextjsWebsocketClient from "../utils/nextjs-websocket-client.js";
 import moveAsSpoken from "../utils/move-as-spoken.js";
 import api from "../api/api.js";
@@ -89,7 +89,7 @@ const Page = () => {
             // TODO: use game id, instead of current-game
             const currentLichessGame = await lichess.getMyCurrentGame();
             chess.reset();
-            chess.load_pgn(currentLichessGame[0].pgn);
+            chess.loadPgn(currentLichessGame[0].pgn);
             headerArray = Object.entries(chess.header());
             chess.reset();
             headerArray.forEach((headerItem) => chess.header(...headerItem));

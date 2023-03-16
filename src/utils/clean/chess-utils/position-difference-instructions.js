@@ -1,5 +1,25 @@
-import Chess from "chess.js";
-// import { Chess } from '../../../../chess'
+import { fenishPositionFromFenPosition } from "./position-mappers";
+
+const pieceObjects = {
+  " ": null,
+  P: { type: "p", color: "w" },
+  R: { type: "p", color: "w" },
+  N: { type: "n", color: "w" },
+  B: { type: "b", color: "w" },
+  K: { type: "k", color: "w" },
+  Q: { type: "q", color: "w" },
+  p: { type: "p", color: "b" },
+  r: { type: "r", color: "b" },
+  n: { type: "n", color: "b" },
+  b: { type: "b", color: "b" },
+  k: { type: "k", color: "b" },
+  q: { type: "q", color: "b" },
+};
+
+const boardArrayFromFenPosition = (position) =>
+  fenishPositionFromFenPosition(position)
+    .split("|")
+    .map((fenRow) => fenRow.split("").map((item) => pieceObjects[item]));
 
 const positionDifferenceInstructions = (targetFen, currentFen) => {
   const target = targetFen
@@ -19,8 +39,6 @@ const positionDifferenceInstructions = (targetFen, currentFen) => {
 
   const instructions = [];
   if (badlyPlacedPiecesFen !== "8/8/8/8/8/8/8/8") {
-    const chess = new Chess();
-    chess.load(`${badlyPlacedPiecesFen} w KQkq - 0 1`);
     const rowNames = ["8", "7", "6", "5", "4", "3", "2", "1"];
     const colNames = ["a", "b", "c", "d", "e", "f", "g", "h"];
     const colors = { w: "white", b: "black" };
@@ -32,8 +50,7 @@ const positionDifferenceInstructions = (targetFen, currentFen) => {
       n: "knight",
       p: "pawn",
     };
-    const pieces = chess
-      .board()
+    const pieces = boardArrayFromFenPosition(badlyPlacedPiecesFen)
       .map((rows, rowIndex) =>
         rows.map((col, colIndex) =>
           !col
@@ -48,8 +65,6 @@ const positionDifferenceInstructions = (targetFen, currentFen) => {
     instructions.push(...pieces);
   } //else
   if (missingPiecesFen !== "8/8/8/8/8/8/8/8") {
-    const chess = new Chess();
-    chess.load(`${missingPiecesFen} w KQkq - 0 1`);
     const rowNames = ["8", "7", "6", "5", "4", "3", "2", "1"];
     const colNames = ["a", "b", "c", "d", "e", "f", "g", "h"];
     const colors = { w: "white", b: "black" };
@@ -61,8 +76,7 @@ const positionDifferenceInstructions = (targetFen, currentFen) => {
       n: "knight",
       p: "pawn",
     };
-    const pieces = chess
-      .board()
+    const pieces = boardArrayFromFenPosition(missingPiecesFen)
       .map((rows, rowIndex) =>
         rows.map((col, colIndex) =>
           !col

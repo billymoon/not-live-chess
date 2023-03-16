@@ -1,4 +1,4 @@
-const fetch = require("isomorphic-unfetch");
+import fetch from "isomorphic-unfetch";
 
 const fetchNdjsonArray = async (r) =>
   (await r.text())

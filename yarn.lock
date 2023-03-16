@@ -2255,15 +2255,15 @@ chess-image-generator@andyruwruw/chess-image-generator:
     fs "0.0.1-security"
     path "^0.12.7"
 
-chess.js@0.11:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/chess.js/-/chess.js-0.11.0.tgz#e1802179b944eab5daf11b5d4bce08cdcadbeffa"
-  integrity sha512-yTpi6XbRMkBtnjSvbt6wEp9Y7JzhJl1MC3GNn67q5ClyccXxCRf5cMPSUg4OblrUapg1kLHm7WzxxEVp20NK1Q==
-
 chess.js@^0.10.2:
   version "0.10.3"
   resolved "https://registry.yarnpkg.com/chess.js/-/chess.js-0.10.3.tgz#8c3b98e8411c2ff3ab4b1fc022ddebd1ae037120"
   integrity sha512-i51JgVM0ksFMbLJYKoDpfrcFxJHq/XQQx8NltCdfMyDv7vpU5JVzsZz1EOw7nA27eGA5t8tSxodAN+Wc704BoQ==
+
+chess.js@^1.0.0-beta.3:
+  version "1.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/chess.js/-/chess.js-1.0.0-beta.3.tgz#5a453f9d8df8f32c87480a395c9b411f080b26ab"
+  integrity sha512-zu8QVvP0BmMzrstlsrXL2LxdHfAkrtyNftVRaJXGI5mn2ZSsgTJujvZx5BVJsPMwBkRZ+omCdZkVyVLBlKn2HA==
 
 chessboardjsx@^2.4.7:
   version "2.4.7"

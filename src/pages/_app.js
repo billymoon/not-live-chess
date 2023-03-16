@@ -6,8 +6,7 @@ import { ChakraProvider, Stack } from "@chakra-ui/react";
 import { theme, extendTheme } from "@chakra-ui/react";
 import api from "../api/api";
 import { lichess } from "../utils/nextjs-lichess";
-// import { Chess } from '../../chess'
-import Chess from "chess.js";
+import { Chess } from "chess.js";
 
 // import "./_app.css";
 // import Layout from "../components/Layout";
@@ -116,13 +115,13 @@ void (() => {
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
     if (dev) {
-      global.publicRuntimeConfig = publicRuntimeConfig;
-      global.emotionTheme = emotionTheme;
-      global.log = (x) => console.log(x) || x;
-      global.api = api;
-      global.chess = new Chess();
-      global.Chess = Chess;
-      global.lichess = lichess;
+      globalThis.publicRuntimeConfig = publicRuntimeConfig;
+      globalThis.emotionTheme = emotionTheme;
+      globalThis.log = (x) => console.log(x) || x;
+      globalThis.api = api;
+      globalThis.chess = new Chess();
+      globalThis.Chess = Chess;
+      globalThis.lichess = lichess;
     }
   }, []);
 

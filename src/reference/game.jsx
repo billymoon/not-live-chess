@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import Chess from "chess.js";
+import { Chess } from "chess.js";
 import nextjsWebsocketClient from "../utils/nextjs-websocket-client.js";
 import moveAsSpoken from "../utils/move-as-spoken.js";
 import api from "../api/api.js";
@@ -24,10 +24,10 @@ const Game = ({ pgn, fen, header, history } = {}) => {
   const reset = () => {
     chess.reset();
     if (pgn) {
-      if (!chess.load_pgn(pgn)) {
+      if (!chess.loadPgn(pgn)) {
         throw Error("invalid pgn", pgn);
       }
-      // chess.delete_comments() // can store returned comments array if wanted
+      // chess.deleteComments() // can store returned comments array if wanted
     }
     if (header) {
       if (
@@ -154,7 +154,7 @@ const Game = ({ pgn, fen, header, history } = {}) => {
     colorToMove: chess.turn() === "w" ? "white" : "black",
     ended:
       (chess.header().Result && chess.header().Result !== "*") ||
-      chess.game_over(),
+      chess.isGameOver(),
     history: chess.history(),
     // ascii: chess.ascii(),
   });

@@ -1,6 +1,6 @@
-const WebSocket = require("ws");
+import WebSocket from "ws";
 // const { boardEventListener, boardReset } = require("./board-event-listener/board-event-listener.js")
-const { boardListener } = require("./board-event-listener/board-listener.js");
+import { boardListener } from "./board-event-listener/board-listener.js";
 
 const wss = new WebSocket.Server({ noServer: true });
 
@@ -26,4 +26,4 @@ const wssHandler = (req, socket, head) =>
     wss.emit("connection", ws, req);
   });
 
-module.exports = wssHandler;
+export default wssHandler;

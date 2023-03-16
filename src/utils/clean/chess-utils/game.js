@@ -1,12 +1,7 @@
-// import { Chess } from 'chess.js'
-// import { Chess } from '../../../../chess'
+import { Chess } from "chess.js";
 // import dynamic from "next/dynamic";
-import ChessJs from "chess.js";
 
 // const ChessboardJSX = dynamic(() => import("chessboardjsx"), { ssr: false });
-// const {Chess} = dynamic(() => import("chess.js"), { ssr: false });
-
-const Chess = ChessJs.Chess || ChessJs;
 
 const moveFromFenPositions = (sourceFen, targetPosition, shallow = false) => {
   const chess = new Chess();

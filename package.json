@@ -6,11 +6,12 @@
   "bin": "bin/not-live-chess",
   "scripts": {
     "dev": "node .",
-    "test": "jest",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
+  "type": "module",
   "license": "ISC",
   "dependencies": {
     "@babel/core": "^7.16.0",
@@ -21,7 +22,7 @@
     "@emotion/server": "^11.4.0",
     "@emotion/styled": "^11",
     "chess-image-generator": "andyruwruw/chess-image-generator",
-    "chess.js": "0.11",
+    "chess.js": "^1.0.0-beta.3",
     "chessboardjsx": "^2.4.7",
     "esm": "^3.2.25",
     "framer-motion": "^4",

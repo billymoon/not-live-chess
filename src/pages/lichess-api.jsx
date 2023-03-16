@@ -2,7 +2,7 @@ import { Container, Button } from "@chakra-ui/react";
 import api from "../api/api";
 import { splitPgnGames } from "../utils/clean/chess-utils/pgn-parser";
 import { lichess } from "../utils/nextjs-lichess";
-import Chess from "chess.js";
+import { Chess } from "chess.js";
 
 const Page = () => {
   return (
@@ -68,7 +68,7 @@ const Page = () => {
             chapter: "1GAz9RmH",
           });
           const chess = new Chess();
-          chess.load_pgn(pgn);
+          chess.loadPgn(pgn);
           console.log(pgn);
           await api.remarkablePosition(chess.fen().split(" ")[0], {
             flipped: true,
@@ -83,7 +83,7 @@ const Page = () => {
 
           const chessGames = splitPgnGames(pgn).map((game) => {
             const chess = new Chess();
-            chess.load_pgn(game);
+            chess.loadPgn(game);
             return chess;
           });
 
@@ -96,7 +96,7 @@ const Page = () => {
         onClick={async () => {
           const puzzle = await lichess.getDailyPuzzle();
           const chess = new Chess();
-          chess.load_pgn(puzzle[0].game.pgn);
+          chess.loadPgn(puzzle[0].game.pgn);
           api.remarkablePosition(chess.fen().split(" ")[0], {
             flipped: chess.turn() === "b",
           });
