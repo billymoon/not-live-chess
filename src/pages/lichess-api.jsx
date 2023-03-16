@@ -1,7 +1,7 @@
 import { Container, Button } from "@chakra-ui/react";
-import api from "../api/api";
-import { splitPgnGames } from "../utils/clean/chess-utils/pgn-parser";
-import { lichess } from "../utils/nextjs-lichess";
+import api from "~/api/api";
+import { splitPgnGames } from "~/utils/clean/chess-utils/pgn-parser";
+import { lichess } from "~/utils/nextjs-lichess";
 import { Chess } from "chess.js";
 
 const Page = () => {

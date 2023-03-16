@@ -1,16 +1,16 @@
 import { Fragment, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { Container, VStack, Button } from "@chakra-ui/react";
-import nextjsWebsocketClient from "../utils/nextjs-websocket-client.js";
-import positionDiff from "../utils/clean/chess-utils/position-difference-instructions";
-import fenish from "../utils/fenish";
-import api from "../api/api.js";
-import Game from "../utils/clean/chess-utils/game";
+import nextjsWebsocketClient from "~/utils/nextjs-websocket-client.js";
+// import positionDiff from "~/utils/clean/chess-utils/position-difference-instructions";
+// import fenish from "~/utils/fenish";
+// import api from "~/api/api.js";
+import Game from "~/utils/clean/chess-utils/game";
 import {
   boardArrayFromFenPosition,
   fenishPositionFromFenPosition,
   fenPositionFromBoardArray,
-} from "../utils/clean/chess-utils/position-mappers.js";
+} from "~/utils/clean/chess-utils/position-mappers.js";
 
 const ChessboardJSX = dynamic(() => import("chessboardjsx"), { ssr: false });
 const START_POSITION = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";

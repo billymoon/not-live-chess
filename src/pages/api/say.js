@@ -1,4 +1,4 @@
-import say from "../../utils/say.js";
+import say from "~/utils/say.js";
 
 const handler = (req, res) => {
   say`${req.query.what}`;

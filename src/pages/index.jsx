@@ -2,11 +2,11 @@ import { Fragment, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { Chess } from "chess.js";
-import nextjsWebsocketClient from "../utils/nextjs-websocket-client.js";
-import moveAsSpoken from "../utils/move-as-spoken.js";
-import api from "../api/api.js";
-import { lichess } from "../utils/nextjs-lichess.js";
-import { LINE_WIDTH } from "../utils/remarkable.js";
+import nextjsWebsocketClient from "~/utils/nextjs-websocket-client.js";
+import moveAsSpoken from "~/utils/move-as-spoken.js";
+import api from "~/api/api.js";
+import { lichess } from "~/utils/nextjs-lichess.js";
+import { LINE_WIDTH } from "~/utils/remarkable.js";
 
 const ChessboardJSX = dynamic(() => import("chessboardjsx"), { ssr: false });
 const seekPosition = "rnbqkbnr/pppppppp/8/8/8/7Q/PPPPPPPP/RNBQKBNR";

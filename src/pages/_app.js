@@ -2,9 +2,9 @@ import { Fragment, useEffect } from "react";
 import getConfig from "next/config";
 import { ChakraProvider } from "@chakra-ui/react";
 import { theme, extendTheme } from "@chakra-ui/react";
-import api from "../api/api";
-import { lichess } from "../utils/nextjs-lichess";
 import { Chess } from "chess.js";
+import api from "~/api/api";
+import { lichess } from "~/utils/nextjs-lichess";
 
 const { publicRuntimeConfig } = getConfig();
 const { dev, font } = publicRuntimeConfig;

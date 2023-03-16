@@ -1,8 +1,8 @@
 import { Fragment, useEffect, useState } from "react";
 import { Chess } from "chess.js";
-import api from "../api/api.js";
-import lichess from "../utils/nextjs-lichess.js";
-import { LINE_WIDTH } from "../utils/remarkable.js";
+import api from "~/api/api.js";
+import lichess from "~/utils/nextjs-lichess.js";
+import { LINE_WIDTH } from "~/utils/remarkable.js";
 
 const Page = () => {
   const [pgn, setPgn] = useState(null);

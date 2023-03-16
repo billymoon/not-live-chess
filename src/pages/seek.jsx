@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { lichess } from "../utils/nextjs-lichess.js";
-import api from "../api/api.js";
+import { lichess } from "~/utils/nextjs-lichess.js";
+import api from "~/api/api.js";
 
 const Page = () => {
   const router = useRouter();

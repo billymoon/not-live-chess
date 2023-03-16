@@ -1,5 +1,3 @@
-// require = require("esm")(module);
-// const next = require("next");
 import next from "next";
 import nextConfig from "./next.config.js";
 import server from "./src/server/server.js";

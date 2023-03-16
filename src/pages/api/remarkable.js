@@ -1,5 +1,5 @@
 import { exec } from "child_process";
-import { FONT_SIZE } from "../../utils/remarkable.js";
+import { FONT_SIZE } from "~/utils/remarkable.js";
 import ChessImageGenerator from "chess-image-generator";
 
 const sh = (command) =>
