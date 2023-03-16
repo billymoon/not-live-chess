@@ -9,7 +9,7 @@ const Page = () => {
 
   useEffect(async () => {
     const chess = new Chess();
-    const game = await lichess.getUserCurrentGame("billymoon");
+    const game = await lichess.getMyCurrentGame();
     chess.load_pgn(game);
     chess.delete_comments();
     const output = chess.pgn({ max_width: LINE_WIDTH });

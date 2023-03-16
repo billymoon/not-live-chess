@@ -17,7 +17,7 @@ const ApiFactory =
   ) =>
   async (...args) =>
     fetch(
-      `https://lichess.org/${
+      `https://lichess.org/${token ? "api/" : ""}${
         typeof urlPath === "function" ? await urlPath(...args) : urlPath
       }`,
       {
@@ -32,8 +32,8 @@ const ApiFactory =
 export default ({ token }) => {
   const AuthenticatedApi = ApiFactory(token);
   const UnAuthenticatedApi = ApiFactory();
-  const account = AuthenticatedApi("api/account");
-  const playing = AuthenticatedApi("api/account/playing", {}, (r) =>
+  const account = AuthenticatedApi("account");
+  const playing = AuthenticatedApi("account/playing", {}, (r) =>
     r.json().then((d) => d.nowPlaying)
   );
 
@@ -43,23 +43,17 @@ export default ({ token }) => {
       cache[token] || (cache[token] = (await account()).id);
   })();
 
-  const getMyGames = AuthenticatedApi(
-    async ({ since, speed, max }) =>
-      `api/games/user/${await userFromToken()}?pgnInJson=true&sort=dateAsc&since=${
+  const getUserGames = AuthenticatedApi(
+    async (user, { since, speed, max }) =>
+      `games/user/${user}?pgnInJson=true&sort=dateAsc&since=${
         new Date(since) * 1
       }&perfType=${speed}&max=${max}`,
     { headers: { Accept: "application/x-ndjson" } },
     fetchNdjsonArray
   );
 
-  const getUserGames = AuthenticatedApi(
-    async (user, { since, speed, max }) =>
-      `api/games/user/${user}?pgnInJson=true&sort=dateAsc&since=${
-        new Date(since) * 1
-      }&perfType=${speed}&max=${max}`,
-    { headers: { Accept: "application/x-ndjson" } },
-    fetchNdjsonArray
-  );
+  const getMyGames = async (options) =>
+    getUserGames(await userFromToken(), options);
 
   // const streamEvent = callback => {
   //     async function lichessEventStreamHandler(response) {
@@ -76,7 +70,7 @@ export default ({ token }) => {
   //     }
 
   //     return get(
-  //         `https://lichess.org/api/stream/event`,
+  //         `https://lichess.org/stream/event`,
   //         {
   //             headers: {
   //                 Authorization: `Bearer ${token}`,
@@ -105,24 +99,33 @@ export default ({ token }) => {
       readNext();
     })();
 
-  const streamEvents = (callback) =>
-    StreamFactory("api/stream/event", callback);
+  const streamEvents = (callback) => StreamFactory("stream/event", callback);
 
   const gameStream = (gameId, callback) =>
-    StreamFactory(() => `api/board/game/stream/${gameId}`, callback);
+    StreamFactory(() => `board/game/stream/${gameId}`, callback);
 
   const move = AuthenticatedApi(
-    (gameId, UCIMove) => `api/board/game/${gameId}/move/${UCIMove}`,
+    (gameId, UCIMove) => `board/game/${gameId}/move/${UCIMove}`,
     { method: "POST" }
   );
-  const resign = AuthenticatedApi(
-    (gameId) => `api/board/game/${gameId}/resign`,
-    {
-      method: "POST",
-    }
-  );
+  const resign = AuthenticatedApi((gameId) => `board/game/${gameId}/resign`, {
+    method: "POST",
+  });
 
-  const challenge = AuthenticatedApi((user) => `api/challenge/${user}`, {
+  const challenge = AuthenticatedApi((user) => `challenge/${user}`, {
+    method: "POST",
+    body: JSON.stringify({
+      rated: true,
+      time: 15,
+      increment: 10,
+      variant: "standard",
+      color: "random",
+      // ratingRange: "1900-2200",
+    }),
+    headers: { "Content-Type": "application/json" },
+  });
+
+  const seek = AuthenticatedApi((user) => `board/seek`, {
     method: "POST",
     body: JSON.stringify({
       rated: true,
@@ -132,13 +135,17 @@ export default ({ token }) => {
   });
 
   const getUserCurrentGame = AuthenticatedApi(
-    (user) => `api/user/${user}/current-game?pgnInJson=true`,
-    { headers: { Accept: "application/x-ndjson" } },
+    (user) => `user/${user}/current-game?pgnInJson=true`,
+    // { headers: { Accept: "application/x-ndjson" } },
+    { headers: { Accept: "application/json" } },
     fetchNdjsonArray
   );
 
+  const getMyCurrentGame = async () =>
+    getUserCurrentGame(await userFromToken());
+
   const getDailyPuzzle = AuthenticatedApi(
-    () => `api/puzzle/daily`,
+    () => `puzzle/daily`,
     { headers: { Accept: "application/x-ndjson" } },
     fetchNdjsonArray
   );
@@ -152,13 +159,22 @@ export default ({ token }) => {
     fetchPlainText
   );
 
+  const getStudies = UnAuthenticatedApi(
+    (user) => `study/by/${user}/export.pgn`,
+    { headers: { Accept: "application/x-chess-pgn" } },
+    fetchPlainText
+  );
+
   return {
     getDailyPuzzle,
     getStudy,
-    getMyGames,
+    getStudies,
     getUserGames,
+    getMyGames,
     getUserCurrentGame,
+    getMyCurrentGame,
     challenge,
+    seek,
     playing,
     streamEvents,
     gameStream,

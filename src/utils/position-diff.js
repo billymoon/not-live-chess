@@ -1,3 +1,4 @@
+// import { Chess } from '../../chess'
 import Chess from "chess.js";
 
 const positionDiff = (targetFen, currentFen) => {

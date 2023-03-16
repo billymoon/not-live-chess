@@ -29,3 +29,18 @@ export const gameTreesFromPgnGames = (pgn) => {
 export const gameMainlinesFromPgnGames = (pgn) => {
   return gameMapperFromPgnGames(pgn, (item) => item.move);
 };
+
+const pgnFromGame = ({ headers, moves }) => {
+  const pgnHeaders = headers
+    .map(({ name, value }) => `[${name} "${value}"]`)
+    .join("\n");
+  const result = headers.find(({ name }) => name === "Result")?.value;
+  const movelist = moves
+    .map((move, index) => (index % 2 ? move : `${index / 2 + 1}. ${move}`))
+    .join(" ");
+
+  return `${pgnHeaders}\n\n${movelist}${result ? ` ${result}` : ""}\n`;
+};
+
+export const splitPgnGames = (pgn) =>
+  gameMainlinesFromPgnGames(pgn).map(pgnFromGame);

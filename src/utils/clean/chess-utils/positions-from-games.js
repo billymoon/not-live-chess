@@ -1,4 +1,5 @@
-const { Chess } = require("chess.js");
+import Chess from "chess.js";
+// import { Chess } from '../../../../chess'
 const { gameTreesFromPgnGames } = require("./pgn-parser.js");
 
 const chess = new Chess();

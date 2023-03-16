@@ -1,9 +1,13 @@
 import { Fragment, useEffect } from "react";
 import Head from "next/head";
+import Link from "next/link";
 import getConfig from "next/config";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, Stack } from "@chakra-ui/react";
 import { theme, extendTheme } from "@chakra-ui/react";
 import api from "../api/api";
+import { lichess } from "../utils/nextjs-lichess";
+// import { Chess } from '../../chess'
+import Chess from "chess.js";
 
 // import "./_app.css";
 // import Layout from "../components/Layout";
@@ -109,14 +113,19 @@ void (() => {
 })()
 `;
 
-if (dev) {
-  global.publicRuntimeConfig = publicRuntimeConfig;
-  global.emotionTheme = emotionTheme;
-  global.log = (x) => console.log(x) || x;
-  global.api = api;
-}
-
 function MyApp({ Component, pageProps }) {
+  useEffect(() => {
+    if (dev) {
+      global.publicRuntimeConfig = publicRuntimeConfig;
+      global.emotionTheme = emotionTheme;
+      global.log = (x) => console.log(x) || x;
+      global.api = api;
+      global.chess = new Chess();
+      global.Chess = Chess;
+      global.lichess = lichess;
+    }
+  }, []);
+
   return (
     <Fragment>
       <Head>
@@ -145,6 +154,7 @@ function MyApp({ Component, pageProps }) {
         <script dangerouslySetInnerHTML={{ __html: consoleWarnScript }} />
       </Head>
       <ChakraProvider theme={emotionTheme}>
+        {/* <Stack><Link href="/seek">Seek</Link></Stack> */}
         <Component {...pageProps} />
       </ChakraProvider>
       {/* <Layout>

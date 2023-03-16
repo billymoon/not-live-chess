@@ -60,6 +60,7 @@ const say = async (words, ...others) => {
   const phraseRaw = words.map((word, i) => word + (others[i] || "")).join("");
   await execCommand(`osascript -e "set Volume 0.4"`);
   await execCommand(`say -v Fiona '${phraseRaw}'`);
+  // await execCommand(`say '${phraseRaw}'`);
 };
 
 module.exports = say;

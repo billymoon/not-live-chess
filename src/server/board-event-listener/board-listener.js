@@ -60,8 +60,11 @@ export const boardListener = async (callback) => {
   board.init();
   board.position();
   board.battery();
-  setInterval(() => {
+  const interval = setInterval(() => {
     board.battery();
   }, 1000 * 20);
-  return unsubscribe;
+  return () => {
+    clearInterval(interval);
+    unsubscribe();
+  };
 };

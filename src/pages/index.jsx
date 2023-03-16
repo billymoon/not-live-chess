@@ -1,20 +1,26 @@
 import { Fragment, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import Chess from "chess.js";
 import nextjsWebsocketClient from "../utils/nextjs-websocket-client.js";
 import moveAsSpoken from "../utils/move-as-spoken.js";
 import api from "../api/api.js";
-import lichess from "../utils/nextjs-lichess.js";
+import { lichess } from "../utils/nextjs-lichess.js";
 import { LINE_WIDTH } from "../utils/remarkable.js";
 
 const ChessboardJSX = dynamic(() => import("chessboardjsx"), { ssr: false });
-// const seekPosition = "rnbqkbnr/pppppppp/8/8/8/7Q/PPPPPPPP/RNBQKBNR";
+const seekPosition = "rnbqkbnr/pppppppp/8/8/8/7Q/PPPPPPPP/RNBQKBNR";
 const startPosition = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
+const millisecToMinSec = (ms) =>
+  `${Math.floor(ms / 1000 / 60)} ${Math.floor((ms / 1000) % 60)}`;
+
 const Page = () => {
+  const router = useRouter();
   const [position, setPosition] = useState(null);
   const [pgn, setPgn] = useState(null);
   const [fen, setFen] = useState(null);
+  const [myColorState, setMyColorState] = useState(null);
 
   useEffect(() => {
     const updateState = () => {
@@ -45,7 +51,7 @@ const Page = () => {
 
     const chess = new Chess();
     if (process.browser) {
-      window.chess = chess;
+      window.mychess = chess;
     }
     let myColor = null;
     let gameId = null;
@@ -54,9 +60,9 @@ const Page = () => {
       // TODO: close websocket on unmount
       ws = await nextjsWebsocketClient((data) => {
         if (data.position === startPosition) {
-          // // chess.reset()
-          // // updateState()
           // api.say("start position")
+        } else if (data.position === seekPosition) {
+          router.push("/seek");
         } else if (data.position) {
           // if it is my turn
           if (chess.turn() === myColor) {
@@ -70,24 +76,20 @@ const Page = () => {
         }
       });
 
-      const nowPlaying = await lichess.nowPlaying();
-      if (nowPlaying.length === 1) {
-        // const chess = new Chess()
-        // chess.load_pgn(game)
-        // chess.delete_comments()
-        // setPgn(output)
-
-        const currentGame = nowPlaying[0];
+      const playing = await lichess.playing();
+      if (playing.length === 1) {
+        const currentGame = playing[0];
         setPosition(currentGame.fen);
         myColor = currentGame.color[0];
+        setMyColorState(myColor);
         gameId = currentGame.fullId;
         let headerArray = [];
         lichess.gameStream(currentGame.fullId, async (message) => {
           if (message.type === "gameFull") {
             // TODO: use game id, instead of current-game
-            const currentPgn = await lichess.getUserCurrentGame("billymoon");
+            const currentLichessGame = await lichess.getMyCurrentGame();
             chess.reset();
-            chess.load_pgn(currentPgn);
+            chess.load_pgn(currentLichessGame[0].pgn);
             headerArray = Object.entries(chess.header());
             chess.reset();
             headerArray.forEach((headerItem) => chess.header(...headerItem));
@@ -107,11 +109,12 @@ const Page = () => {
               chess.move(move, { sloppy: true });
             });
             if (chess.turn() === myColor) {
+              api.say(moveAsSpoken(chess.history().slice(-1)[0]));
+            } else {
               api.say(
-                moveAsSpoken(chess.history().slice(-1)[0])
-                // `${moveAsSpoken(chess.history().slice(-1)[0])} ${Math.round(
-                //   (myColor === "w" ? message.wtime : message.btime) / 1000 / 60
-                // )} minutes`
+                millisecToMinSec(
+                  myColor === "w" ? message.wtime : message.btime
+                )
               );
             }
             updateState();
@@ -120,7 +123,7 @@ const Page = () => {
           }
         });
       } else {
-        nowPlaying.forEach(console.log);
+        playing.forEach(console.log);
       }
     })();
 
@@ -133,7 +136,11 @@ const Page = () => {
 
   return (
     <Fragment>
-      <ChessboardJSX position={position} draggable={false} />
+      <ChessboardJSX
+        position={position}
+        draggable={false}
+        orientation={myColorState === "w" ? "white" : "black"}
+      />
       <pre>
         <code>{fen}</code>
       </pre>

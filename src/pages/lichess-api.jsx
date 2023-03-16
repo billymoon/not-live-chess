@@ -1,30 +1,10 @@
-import { Fragment, useEffect, useState } from "react";
-// import dynamic from "next/dynamic";
-import LichessApi from "../utils/clean/lichess-api";
-import { Container, VStack, Button } from "@chakra-ui/react";
-import getConfig from "next/config";
+import { Container, Button } from "@chakra-ui/react";
 import api from "../api/api";
-
-const { publicRuntimeConfig } = getConfig();
-const lichess = LichessApi({ token: publicRuntimeConfig.lichessToken });
-// import nextjsWebsocketClient from "../app/nextjs-websocket-client.js";
-// import positionDiff from "../utils/position-diff";
+import { splitPgnGames } from "../utils/clean/chess-utils/pgn-parser";
+import { lichess } from "../utils/nextjs-lichess";
 import Chess from "chess.js";
 
-// const ChessboardJSX = dynamic(() => import("chessboardjsx"), { ssr: false });
-
 const Page = () => {
-  //   const [account, setAccount] = useState(null);
-  //   const [playing, setPlaying] = useState(null);
-  //   const [myGames, setMyGames] = useState(null);
-
-  //   useEffect(() => { console.log(account) }, [account]);
-  //   useEffect(() => { console.log(playing) }, [playing]);
-  //   useEffect(() => { console.log(myGames) }, [myGames]);
-  useEffect(() => {
-    window.lichess = lichess;
-  });
-
   return (
     <Container mt={4}>
       <Button onClick={async () => console.log(await lichess.account())}>
@@ -37,7 +17,6 @@ const Page = () => {
         onClick={async () =>
           console.log(
             await lichess.getMyGames({
-              user: "billymoon",
               since: "2023",
               speed: null,
               max: 1,
@@ -97,6 +76,21 @@ const Page = () => {
         }}
       >
         Get study chapter
+      </Button>
+      <Button
+        onClick={async () => {
+          const pgn = await lichess.getStudies("billymoon");
+
+          const chessGames = splitPgnGames(pgn).map((game) => {
+            const chess = new Chess();
+            chess.load_pgn(game);
+            return chess;
+          });
+
+          chessGames.map((chess) => console.log(chess.pgn()));
+        }}
+      >
+        Get studies of user
       </Button>
       <Button
         onClick={async () => {
