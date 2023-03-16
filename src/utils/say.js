@@ -1,5 +1,5 @@
-const { exec } = require("child_process");
-const { Client } = require("ssh2");
+import { exec } from "child_process";
+import { Client } from "ssh2";
 
 // osascript -e 'output volume of (get volume settings)'
 // say "[[volm 0.1]] this is not so loud"
@@ -63,4 +63,4 @@ const say = async (words, ...others) => {
   // await execCommand(`say '${phraseRaw}'`);
 };
 
-module.exports = say;
+export default say;

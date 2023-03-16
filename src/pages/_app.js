@@ -1,24 +1,18 @@
 import { Fragment, useEffect } from "react";
-import Head from "next/head";
-import Link from "next/link";
 import getConfig from "next/config";
-import { ChakraProvider, Stack } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import { theme, extendTheme } from "@chakra-ui/react";
 import api from "../api/api";
 import { lichess } from "../utils/nextjs-lichess";
 import { Chess } from "chess.js";
 
-// import "./_app.css";
-// import Layout from "../components/Layout";
-
 const { publicRuntimeConfig } = getConfig();
-
 const { dev, font } = publicRuntimeConfig;
 
 const emotionTheme = extendTheme({
   fonts: {
-    body: `${publicRuntimeConfig.font}, Sans-Serif`,
-    heading: `${publicRuntimeConfig.font}, Sans-Serif`,
+    body: `${font}, Sans-Serif`,
+    heading: `${font}, Sans-Serif`,
     mono: "Courier, Sans-Serif",
   },
   styles: {
@@ -99,19 +93,6 @@ const emotionTheme = extendTheme({
   },
 });
 
-const consoleWarnScript = `
-void (() => {
-  const consoleWarn = console.warn
-  console.warn = (...args) => {
-    if(args[0].startsWith("Warning: componentWillReceiveProps has been renamed")) {
-      // do nothing
-    } else {
-      consoleWarn.call(this, ...args)
-    }
-  };
-})()
-`;
-
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
     if (dev) {
@@ -127,31 +108,6 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <Fragment>
-      <Head>
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon-16x16.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon-32x32.png"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="true"
-        />
-        <link
-          rel="stylesheet"
-          href={`https://fonts.googleapis.com/css2?family=${font}&display=swap`}
-        />
-        <script dangerouslySetInnerHTML={{ __html: consoleWarnScript }} />
-      </Head>
       <ChakraProvider theme={emotionTheme}>
         {/* <Stack><Link href="/seek">Seek</Link></Stack> */}
         <Component {...pageProps} />
