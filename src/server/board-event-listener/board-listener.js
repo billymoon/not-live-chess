@@ -35,6 +35,7 @@ const getBoard = async () => {
       UnchunkerFactory((incoming) => {
         const [type, mystery, length, ...message] = incoming;
         const decoded = interpreter(type, message);
+        broadcast({ type: "raw", data: { type, message, decoded } });
 
         if (type == 142) {
           if (include.move) {
@@ -60,8 +61,11 @@ export const boardListener = async (callback) => {
   board.init();
   board.position();
   board.battery();
-  setInterval(() => {
+  const interval = setInterval(() => {
     board.battery();
-  }, 1000 * 20);
-  return unsubscribe;
+  }, 1000 * 2);
+  return () => {
+    clearInterval(interval);
+    unsubscribe();
+  };
 };
