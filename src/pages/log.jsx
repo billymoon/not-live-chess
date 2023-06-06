@@ -1,11 +1,14 @@
 import { Fragment, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { Container, VStack, Button } from "@chakra-ui/react";
 import nextjsWebsocketClient from "~/utils/nextjs-websocket-client.js";
 import positionDiff from "~/utils/clean/chess-utils/position-difference-instructions";
 import api from "~/api/api.js";
 
 const ChessboardJSX = dynamic(() => import("chessboardjsx"), { ssr: false });
+
+console.debug(Math.random().toString());
 
 const Page = () => {
   const [position, setPosition] = useState(null);
@@ -51,6 +54,7 @@ const Page = () => {
             <code>{setupInstructions}</code>
           </pre>
         ) : null}
+        <Link href="/local">local</Link>
         {/* <ChessboardJSX position={badPosition} draggable={false} width={300} /> */}
         {/* <ChessboardJSX position={missPosition} draggable={false} width={300} /> */}
         {/* <Button minW={72}>Awesome</Button> */}

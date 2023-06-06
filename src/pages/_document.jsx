@@ -9,6 +9,36 @@ const { font } = publicRuntimeConfig;
 
 const consoleWarnScript = `
 void (() => {
+
+  const getWSUrl = (location) => {
+    const url = new URL("/logger", location);
+    url.protocol = url.protocol.replace("http", "ws");
+    return url.toString();
+  };
+  
+  const ws = new WebSocket(getWSUrl(window.location));
+
+  // ws.onmessage = (messageRaw) => {
+  //   const message = JSON.parse(messageRaw.data);
+  //   // console.debug("fe:message", message);
+  // };
+
+  // ws.onopen = () => resolve(ws);
+
+  const consoleDebug = console.debug
+  console.debug = function (...args) {
+    consoleDebug(...args);
+
+    const message = typeof args[0] === 'string' ? args[0] : Object.prototype.toString.call(args[0]) === '[object Object]' && args[0].message || "no message"
+
+    try {
+      ws.send(JSON.stringify({ message, payload: typeof args[0] === 'string' ? args[1] : args[0] }))
+    } catch (err) {
+      console.log(err);
+    }
+  }
+})();
+void (() => {
   const consoleWarn = console.warn
   console.warn = (...args) => {
     if(args[0].startsWith("Warning: componentWillReceiveProps has been renamed")) {
@@ -17,7 +47,7 @@ void (() => {
       consoleWarn.call(this, ...args)
     }
   };
-})()
+})();
 `;
 
 const renderStatic = async (html) => {

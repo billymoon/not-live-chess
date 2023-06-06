@@ -4,7 +4,7 @@ import { Container, VStack, Button } from "@chakra-ui/react";
 import nextjsWebsocketClient from "~/utils/nextjs-websocket-client.js";
 // import positionDiff from "~/utils/clean/chess-utils/position-difference-instructions";
 // import fenish from "~/utils/fenish";
-// import api from "~/api/api.js";
+import api from "~/api/api.js";
 import Game from "~/utils/clean/chess-utils/game";
 import {
   boardArrayFromFenPosition,
@@ -31,7 +31,7 @@ const useGame = () => {
     const before = game.fen();
     game.moveToPosition(position);
     const after = game.fen();
-    console.log(`${position}\n${before}\n${after}`);
+    // console.log(`${position}\n${before}\n${after}`);
     if (before !== after) {
       setPgn(game.pgn());
     }
@@ -54,6 +54,11 @@ const Page = () => {
   const { pgn, fen, reset, moveToPosition } = useGame();
 
   useEffect(() => {
+    console.log(pgn);
+    api.remark(pgn);
+  }, [pgn]);
+
+  useEffect(() => {
     let ws;
     void (async () => {
       let lifted = [];
@@ -69,7 +74,7 @@ const Page = () => {
             )
               .replaceAll("|", "")
               .split("");
-            console.log(data.data, lifted, piecesOnBoard);
+            // console.log(data.data, lifted, piecesOnBoard);
             lifted = lifted.filter(
               (liftedBoardPosition) =>
                 data.data.decoded.piece !== piecesOnBoard[liftedBoardPosition]
@@ -79,17 +84,19 @@ const Page = () => {
           }
         } else if (data.position === START_POSITION) {
           lifted = [];
-          console.clear();
+          // console.clear();
           console.log(reset());
+          api.say(`ready to go`);
+          api.remark(`...`);
         } else if (data.position) {
           const boardArray = boardArrayFromFenPosition(data.position);
           const gameArray = boardArrayFromFenPosition(fen.replace(/ .*/, ""));
           lifted.forEach((liftedBoardPosition) => {
             boardArray[liftedBoardPosition] = gameArray[liftedBoardPosition];
           });
-          console.log(fenPositionFromBoardArray(boardArray));
-          //   console.log(1, );
-          //   console.log(2, pgn, pgn === moveToPosition(fenPositionFromBoardArray(boardArray)));
+          // console.log(fenPositionFromBoardArray(boardArray));
+          // console.log(1, );
+          // console.log(2, pgn, pgn === moveToPosition(fenPositionFromBoardArray(boardArray)));
           if (moveToPosition(data.position)) {
             lifted = []; // make conditional, but on what..?
           } else if (moveToPosition(fenPositionFromBoardArray(boardArray))) {
@@ -97,10 +104,10 @@ const Page = () => {
           }
           //   moveToPosition(data.position);
         } else if (data.type === "error") {
-          console.log({ err: data });
+          // console.log({ err: data });
         }
       });
-      console.log("websocket connected", ws);
+      // console.log("websocket connected", ws);
     })();
     return () => {
       if (ws) {

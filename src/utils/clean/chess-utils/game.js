@@ -51,7 +51,7 @@ const Game = () => {
   const moveToPosition = (position) => {
     const moves = moveFromFenPositions(chess.fen(), position);
     if (moves) {
-      console.log(moves);
+      // console.log(moves);
       moves.forEach((move) => {
         chess.move(move);
       });

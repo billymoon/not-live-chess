@@ -106,6 +106,8 @@ function MyApp({ Component, pageProps }) {
     }
   }, []);
 
+  console.debug("render _app with props", { pageProps });
+
   return (
     <Fragment>
       <ChakraProvider theme={emotionTheme}>

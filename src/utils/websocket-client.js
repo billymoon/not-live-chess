@@ -10,6 +10,13 @@ const websocketClient = (config, callback) =>
 
     ws.onmessage = (messageRaw) => {
       const message = JSON.parse(messageRaw.data);
+      console.debug("dgt:message", message);
+      // if (message.charging) {
+      //   // window.api.say("Nice");
+      //   // console.log("Nice...")
+      // } else {
+      //   // console.log("bad...")
+      // }
       callback(message);
     };
 
