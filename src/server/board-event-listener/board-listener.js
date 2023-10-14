@@ -35,7 +35,11 @@ const getBoard = async () => {
       UnchunkerFactory((incoming) => {
         const [type, mystery, length, ...message] = incoming;
         const decoded = interpreter(type, message);
-        broadcast({ type: "raw", data: { type, message, decoded } });
+        broadcast({
+          type: "raw",
+          timestamp: new Date().toISOString(),
+          data: { type, message, decoded },
+        });
 
         if (type == 142) {
           if (include.move) {

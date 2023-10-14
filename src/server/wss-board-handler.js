@@ -7,8 +7,14 @@ const wss = new WebSocket.Server({ noServer: true });
 wss.on("connection", async function connection(ws) {
   console.log("incoming connection");
 
+  let previousData = null;
   unsubscribe = await boardListener((data) => {
-    ws.send(JSON.stringify(data));
+    const nextData = JSON.stringify(data.data);
+    if (data.type === "raw" && previousData !== nextData) {
+      // if (true) {
+      ws.send(JSON.stringify(data));
+      previousData = nextData;
+    }
   });
 
   // ws.on('message', async (messageRaw) => {
