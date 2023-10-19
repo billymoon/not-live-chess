@@ -25,10 +25,9 @@ const Page = () => {
   useEffect(() => {
     const updateState = () => {
       setPosition(chess.fen());
-      // setPgn(chess.pgn({ max_width: 5, newline_char: "\n" }));
       const updatedPgn = chess.pgn({
-        max_width: LINE_WIDTH,
-        newline_char: "\n",
+        maxWidth: LINE_WIDTH,
+        newlineChar: "\n",
       });
       api.remark(updatedPgn);
       setPgn(updatedPgn);
@@ -58,7 +57,8 @@ const Page = () => {
     let ws = null;
     void (async () => {
       // TODO: close websocket on unmount
-      ws = await nextjsWebsocketClient((data) => {
+      ws = await nextjsWebsocketClient((rawData) => {
+        const data = rawData?.data?.decoded || rawData;
         if (data.position === startPosition) {
           // api.say("start position")
         } else if (data.position === seekPosition) {
@@ -94,7 +94,14 @@ const Page = () => {
             chess.reset();
             headerArray.forEach((headerItem) => chess.header(...headerItem));
             message.state.moves.split(" ").map((move) => {
-              chess.move(move, { sloppy: true });
+              try {
+                if (move) {
+                  chess.move(move);
+                }
+              } catch (err) {
+                console.error(err);
+                console.log({ pgn: chess.pgn(), move, message });
+              }
             });
             updateState();
             api.say(
@@ -106,7 +113,12 @@ const Page = () => {
             chess.reset();
             headerArray.forEach((headerItem) => chess.header(...headerItem));
             message.moves.split(" ").map((move) => {
-              chess.move(move, { sloppy: true });
+              try {
+                chess.move(move);
+              } catch (err) {
+                console.error(err);
+                console.log({ pgn: chess.pgn(), move, message });
+              }
             });
             if (chess.turn() === myColor) {
               api.say(moveAsSpoken(chess.history().slice(-1)[0]));

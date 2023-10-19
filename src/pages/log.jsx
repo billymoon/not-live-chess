@@ -8,34 +8,54 @@ import api from "~/api/api.js";
 
 const ChessboardJSX = dynamic(() => import("chessboardjsx"), { ssr: false });
 
+const REPORT_POWER_POSITION = "rnbqkbnr/pppppppp/7q/8/8/8/PPPPPPPP/RNBQKBNR";
+
 console.debug(Math.random().toString());
 
 const Page = () => {
   const [position, setPosition] = useState(null);
   const [setupInstructions, setSetupInstructions] = useState(null);
+  const [reportPower, setReportPower] = useState(false);
   // const [badPosition, setBadPosition] = useState(null);
   // const [missPosition, setMissPosition] = useState(null);
 
   useEffect(() => {
-    nextjsWebsocketClient((data) => {
-      if (data.position) {
-        setPosition(data.position);
-
-        const { instructions, missingPiecesFen } = positionDiff(
-          "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
-          data.position
+    nextjsWebsocketClient((rawData) => {
+      const data = rawData?.data?.decoded || rawData;
+      console.log(data.charge && reportPower, { data, reportPower });
+      if (data.charge && reportPower) {
+        api.say(
+          `Power level at ${data.charge.percent} ${
+            data.charge.charging ? `and counting` : ""
+          }`
         );
-        // const { instructions, missingPiecesFen } = positionDiff('r1bqkbnr/pppp1ppp/2n5/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R', data.position)
-        // setBadPosition(badlyPlacedPiecesFen)
-        // setMissPosition(missingPiecesFen)
-
-        if (instructions.length) {
-          setSetupInstructions(
-            `Instructions to match target position:\n${instructions.join("\n")}`
-          );
+      }
+      if (data.position) {
+        console.log(data.position);
+        if (data.position === REPORT_POWER_POSITION) {
+          setReportPower(true);
         } else {
-          setSetupInstructions("we are in the target position");
-          api.say("target position");
+          setPosition(data.position);
+          api.remarkablePosition(data.position);
+
+          const { instructions, missingPiecesFen } = positionDiff(
+            "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
+            data.position
+          );
+          // const { instructions, missingPiecesFen } = positionDiff('r1bqkbnr/pppp1ppp/2n5/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R', data.position)
+          // setBadPosition(badlyPlacedPiecesFen)
+          // setMissPosition(missingPiecesFen)
+
+          if (instructions.length) {
+            setSetupInstructions(
+              `Instructions to match target position:\n${instructions.join(
+                "\n"
+              )}`
+            );
+          } else {
+            setSetupInstructions("we are in the target position");
+            api.say("target position");
+          }
         }
       } else if (data.type === "error") {
         console.log({ err: data });

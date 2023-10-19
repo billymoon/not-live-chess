@@ -1,3 +1,4 @@
+// import Head from "next/head"
 import { Fragment, useEffect } from "react";
 import getConfig from "next/config";
 import { ChakraProvider } from "@chakra-ui/react";
@@ -110,6 +111,11 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <Fragment>
+      {/* <Head>
+               <script src="//cdn.jsdelivr.net/npm/eruda"></script>
+               <script>{`eruda.init();`}</script>
+               <style>{`html, body { height: 130vh; background: red; }`}</style>
+            </Head> */}
       <ChakraProvider theme={emotionTheme}>
         {/* <Stack><Link href="/seek">Seek</Link></Stack> */}
         <Component {...pageProps} />

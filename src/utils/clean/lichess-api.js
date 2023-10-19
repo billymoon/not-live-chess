@@ -79,7 +79,7 @@ export default ({ token }) => {
   //         (response) => lichessEventStreamHandler(response).catch(console.warn)
   //     );
   // }
-  const StreamFactory = (urlPath, callback) =>
+  const StreamFactory = (urlPath, callback, processor = (i) => i) =>
     AuthenticatedApi(urlPath, {}, (response) => {
       const reader = response.body.getReader();
       const readNext = () => {
@@ -89,7 +89,13 @@ export default ({ token }) => {
               .map((charcode) => String.fromCharCode(charcode))
               .join("");
             if (messageString.trim().length) {
-              callback(JSON.parse(messageString));
+              try {
+                const parsed = JSON.parse(processor(messageString.trim()));
+                callback(parsed);
+              } catch (err) {
+                console.log(err);
+                console.log({ messageString, value });
+              }
             }
             readNext();
           }
@@ -129,7 +135,10 @@ export default ({ token }) => {
     method: "POST",
     body: JSON.stringify({
       rated: true,
-      clock: { limit: 15 * 60, increment: 10 },
+      // clock: { limit: 15 * 60, increment: 10 },
+      time: 15,
+      increment: 10,
+      variant: "standard",
     }),
     headers: { "Content-Type": "application/json" },
   });
@@ -149,6 +158,42 @@ export default ({ token }) => {
     { headers: { Accept: "application/x-ndjson" } },
     fetchNdjsonArray
   );
+
+  // const getFollowing = AuthenticatedApi(
+  //   () => `rel/following`,
+  //   { headers: { Accept: "application/x-ndjson" } },
+  //   fetchNdjsonArray
+  // );
+  // const getFollowing = (callback) =>
+  //   StreamFactory(() => `rel/following`, callback, str => JSON.stringify(str.split("\n").map(JSON.parse)));
+
+  const getFollowing = (callback) =>
+    AuthenticatedApi("rel/following", {}, (response) => {
+      console.log(1, response.body);
+      const reader = response.body.getReader();
+      const readNext = () => {
+        reader.read().then(({ done, value }) => {
+          console.log({ done, value });
+          if (!done) {
+            const messageString = Array.from(value)
+              .map((charcode) => String.fromCharCode(charcode))
+              .join("");
+            if (messageString.trim().length) {
+              try {
+                const parsed = JSON.parse(processor(messageString.trim()));
+                callback(parsed);
+              } catch (err) {
+                console.log(err);
+                console.log({ messageString, value });
+              }
+            }
+            readNext();
+          }
+        });
+      };
+
+      readNext();
+    });
 
   const getStudy = UnAuthenticatedApi(
     (studyId, { chapter }) =>
@@ -178,6 +223,7 @@ export default ({ token }) => {
     playing,
     streamEvents,
     gameStream,
+    getFollowing,
     account,
     move,
     resign,

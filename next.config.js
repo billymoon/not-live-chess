@@ -7,6 +7,15 @@ const port = index !== -1 ? process.argv[index + 1] : "3000";
 loadEnvConfig(".");
 
 const nextConfig = {
+  webpack: (config, options) => {
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      crypto: false,
+      path: false,
+      fs: false,
+    };
+    return config;
+  },
   // experimental: { esmExternals: true },
   transpilePackages: ["chess.js"],
   serverRuntimeConfig: {

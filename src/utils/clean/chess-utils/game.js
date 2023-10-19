@@ -60,6 +60,7 @@ const Game = () => {
   };
 
   return {
+    history: () => chess.history(),
     fen: () => chess.fen(),
     reset: () => chess.reset(),
     pgn: () => chess.pgn(),

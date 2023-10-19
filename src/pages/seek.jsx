@@ -10,7 +10,8 @@ const Page = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const wsPromise = nextjsWebsocketClient((data) => {
+    const wsPromise = nextjsWebsocketClient((rawData) => {
+      const data = rawData?.data?.decoded || rawData;
       if (data.position === START_POSITION) {
         lichess.streamEvents((message) => {
           console.log(message);

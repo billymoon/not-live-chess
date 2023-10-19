@@ -105,6 +105,19 @@ const Page = () => {
       >
         Get daily puzzle
       </Button>
+      <Button
+        onClick={async () => {
+          const following = await lichess.getFollowing(console.log);
+          // const chess = new Chess();
+          // chess.loadPgn(puzzle[0].game.pgn);
+          // api.remarkablePosition(chess.fen().split(" ")[0], {
+          //   flipped: chess.turn() === "b",
+          // });
+          console.log({ following });
+        }}
+      >
+        Get followed
+      </Button>
     </Container>
   );
 };
